@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Posterboxd",
+  "version": "0.1.0",
+  "description": "Custom posters for letterboxd",
+  "author": "Samip Poudel",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.letterboxd.com/*"],
+      "js": ["script.js"]
+    }
+  ]
+}
