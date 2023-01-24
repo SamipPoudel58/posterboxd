@@ -62,8 +62,10 @@ window.onload = function () {
 
   function renderPosters() {
     chrome.storage.sync.get(['posterboxd'], function (result) {
-      if (result && result.posterboxd) {
+      if (!result) return;
+      if (result.posterboxd) {
         const storedPosters = result.posterboxd;
+        console.log(storedPosters);
         Object.keys(storedPosters).forEach((movie) => {
           const foundPosters = Array.from(
             document.querySelectorAll(`.film-poster img[src*="${movie}"]`)
