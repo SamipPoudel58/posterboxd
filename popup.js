@@ -74,7 +74,7 @@ let POSTERS = {
 
 const getChromeStore = new Promise((resolve, reject) => {
   if (!chrome.storage) reject();
-  chrome.storage.sync.get(['posterboxd'], function (result) {
+  chrome.storage.local.get(['posterboxd'], function (result) {
     if (!result) reject();
     if (result.posterboxd) {
       resolve(result.posterboxd);
@@ -101,12 +101,12 @@ async function renderContent() {
       // delete button
       const remove = document.createElement('div');
       remove.classList.add('remove');
-      remove.innerHTML = '&#10006';
+      remove.innerHTML = `❌`;
       posterHolder.appendChild(remove);
       remove.addEventListener('click', () => {
         delete POSTERS[movie];
         if (chrome.storage) {
-          chrome.storage.sync.set({
+          chrome.storage.local.set({
             posterboxd: POSTERS,
           });
         }
@@ -116,7 +116,7 @@ async function renderContent() {
       // edit button
       const edit = document.createElement('div');
       edit.classList.add('edit');
-      edit.innerHTML = '&#9998;';
+      edit.innerHTML = '&#9997;';
       posterHolder.appendChild(edit);
       edit.addEventListener('click', () => {
         console.log('edit');
@@ -124,6 +124,14 @@ async function renderContent() {
         editingMovie = movie;
         renderContent();
       });
+
+      // letterboxd link button
+      const lbox = document.createElement('a');
+      lbox.classList.add('lbox-link');
+      lbox.innerHTML = '🔗';
+      lbox.href = `https://letterboxd.com/film/${movie}`;
+      lbox.target = '_blank';
+      posterHolder.appendChild(lbox);
 
       content.appendChild(posterHolder);
     });
@@ -145,7 +153,7 @@ async function renderContent() {
       const newSrcSet = editSrcSet.value;
       POSTERS[editingMovie] = [newSrc, newSrcSet];
       if (chrome.storage) {
-        chrome.storage.sync.set({
+        chrome.storage.local.set({
           posterboxd: POSTERS,
         });
       }

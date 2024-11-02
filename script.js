@@ -31,26 +31,26 @@ window.onload = function () {
         overlay.appendChild(btn);
 
         btn.addEventListener('click', (e) => {
-          console.log([
-            e.target.closest('a').previousSibling.src,
-            e.target.closest('a').previousSibling.srcset,
-          ]);
           const film = e.target.closest('a').href.split('/').at(-2);
           const poster = [
-            e.target.closest('a').previousSibling.src,
+            e.target
+              .closest('a')
+              .previousSibling.src.replace('0-125-0-187', '0-230-0-345')
+              .replace('0-150-0-225', '0-230-0-345')
+              .replace('0-70-0-105', '0-230-0-345'),
             e.target.closest('a').previousSibling.srcset,
           ];
-          chrome.storage.sync.get(['posterboxd'], function (result) {
+          chrome.storage.local.get(['posterboxd'], function (result) {
             if (result && result.posterboxd) {
               const storedPosters = result.posterboxd;
               storedPosters[film] = poster;
               console.log({ storedPosters });
-              chrome.storage.sync.set({
+              chrome.storage.local.set({
                 posterboxd: storedPosters,
               });
             } else {
               console.log('first entry', { film, poster });
-              chrome.storage.sync.set({
+              chrome.storage.local.set({
                 posterboxd: { [film]: poster },
               });
             }
@@ -61,19 +61,27 @@ window.onload = function () {
   }
 
   function renderPosters() {
-    chrome.storage.sync.get(['posterboxd'], function (result) {
+    chrome.storage.local.get(['posterboxd'], function (result) {
       if (!result) return;
       if (result.posterboxd) {
         const storedPosters = result.posterboxd;
         console.log(storedPosters);
         Object.keys(storedPosters).forEach((movie) => {
           const foundPosters = Array.from(
-            document.querySelectorAll(`.film-poster img[src*="${movie}"]`)
+            document.querySelectorAll(
+              `.film-poster[data-film-link="/film/${movie}/"] img`
+            )
           );
-          foundPosters.forEach((poster) => {
+
+          // filter out custom posters
+          const defaultPosters = foundPosters.filter(
+            (poster) => !poster.src.includes('alternative-poster')
+          );
+
+          defaultPosters.forEach((poster) => {
             poster.src = storedPosters[movie][0].replace(
               '125-0-187',
-              '250-0-375'
+              '230-0-345'
             );
             poster.srcset = storedPosters[movie][1];
           });

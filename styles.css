@@ -62,8 +62,9 @@ main {
 }
 
 .remove,
-.edit {
-  font-size: 0.6rem;
+.edit,
+.lbox-link {
+  font-size: 0.4rem;
   line-height: 0.8;
   padding: 0.35rem;
   background-color: rgba(0, 0, 0, 0.5);
@@ -78,6 +79,14 @@ main {
 
 .edit {
   top: 22px;
+  font-size: 0.5rem;
+}
+
+.lbox-link {
+  color: white;
+  text-decoration: none;
+  font-weight: medium;
+  top: 42px;
   font-size: 0.5rem;
 }
 
@@ -125,7 +134,8 @@ main {
 }
 
 .poster-holder:hover .remove,
-.poster-holder:hover .edit {
+.poster-holder:hover .edit,
+.poster-holder:hover .lbox-link {
   display: block;
 }
 
